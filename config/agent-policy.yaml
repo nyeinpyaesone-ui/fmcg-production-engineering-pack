@@ -1,0 +1,41 @@
+policy_version: "1.0"
+project: "FMCG ERP"
+mode: "human-supervised"
+default_decision: "deny"
+data_handling:
+  source_exports: read_only
+  production_data: prohibited_for_agents
+  secrets: never_read_or_emit
+  personal_data: synthetic_or_redacted_only
+  external_upload: deny
+permissions:
+  inspect_repository: allow
+  edit_assigned_paths: allow
+  run_local_tests: allow
+  install_dependencies: approval_required
+  network_access: approval_required
+  modify_migrations: review_required
+  access_production: deny
+  deploy_staging: approval_required
+  deploy_production: explicit_human_approval
+  merge_to_main: explicit_human_approval
+  create_release_tag: explicit_human_approval
+  destructive_operations: deny
+  modify_auth_or_permissions: security_review_required
+  change_financial_posting_logic: domain_and_qa_review_required
+  change_tax_or_payroll_rules: business_owner_approval_required
+quality_gates:
+  required: [format, lint, typecheck, unit_tests, integration_tests, migration_tests, security_scan, production_build]
+  release_requires:
+    - all_required_checks_pass
+    - reviewed_diff
+    - migration_plan
+    - backup_and_recovery_evidence
+    - release_owner_approval
+audit:
+  record_task_id: true
+  record_agent_and_model: true
+  record_files_changed: true
+  record_commands_and_exit_codes: true
+  record_approval_decisions: true
+  redact_tokens_and_credentials: true

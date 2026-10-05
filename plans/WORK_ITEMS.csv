@@ -1,0 +1,18 @@
+id,phase,task,owner,depends_on,priority,acceptance_criteria,approval_gate,status,notes
+FMCG-001,0,Confirm repository and authoritative source files,orchestrator,,P0,Repository branch commit and source ownership recorded,no,proposed,
+FMCG-002,0,Approve v1 workflows and operating rules,business-domain-agent,FMCG-001,P0,Order-to-cash and procure-to-pay state maps approved,yes,proposed,
+FMCG-003,1,Create reproducible backend and frontend workspace,devops-agent,FMCG-001,P0,Clean clone installs and builds from lockfiles,no,proposed,
+FMCG-004,1,Pin runtime and dependency versions,devops-agent,FMCG-003,P0,Compatibility matrix approved and lockfiles committed,yes,proposed,Pins blocked by FMCG-003 lockfiles.
+FMCG-005,1,Implement CI quality and security gates,devops-agent,FMCG-003,P0,Required checks run on PR and fail on violations,no,proposed,
+FMCG-006,2,Complete DB metadata and Alembic configuration,backend-agent,FMCG-003,P0,Empty DB migration and upgrade fixture both pass,no,proposed,
+FMCG-007,2,Implement secure identity and scoped authorization,backend-agent,FMCG-006,P0,Role escalation and cross-scope tests pass,security_review,proposed,
+FMCG-008,3,Implement master data and stock ledger,backend-agent,FMCG-006;FMCG-007,P0,Movement ledger reconciles under concurrent operations,no,proposed,
+FMCG-009,3,Implement receipt reservation transfer and count workflows,backend-agent,FMCG-008,P0,Inventory invariants and idempotent retries pass,no,proposed,
+FMCG-010,4,Implement purchasing and receiving workflow,backend-agent,FMCG-002;FMCG-009,P0,PO to receipt to supplier bill tests pass,yes,proposed,
+FMCG-011,4,Implement sales fulfillment and invoice workflow,backend-agent,FMCG-002;FMCG-009,P0,Order to delivery to invoice tests pass,yes,proposed,
+FMCG-012,5,Implement balanced GL posting and payment allocation,backend-agent,FMCG-010;FMCG-011,P0,Journal balance replay and reconciliation tests pass,domain_review,proposed,
+FMCG-013,6,Implement role-aware UI and typed API integration,frontend-agent,FMCG-007;FMCG-011,P1,Core workflows pass browser tests and accessibility review,no,proposed,
+FMCG-014,6,Implement reports and daily close,backend-agent,FMCG-012,P1,Report totals reconcile to ledger and source documents,yes,proposed,
+FMCG-015,7,Threat model and security verification,qa-security-agent,FMCG-007;FMCG-012;FMCG-013,P0,No unresolved critical/high release blockers,yes,proposed,
+FMCG-016,7,Load and recovery testing,devops-agent,FMCG-014,P0,Agreed SLO RPO RTO and restore checks pass,yes,proposed,
+FMCG-017,8,Staging rehearsal and release evidence,orchestrator,FMCG-015;FMCG-016,P0,Immutable artifact smoke tests and sign-offs recorded,yes,proposed,

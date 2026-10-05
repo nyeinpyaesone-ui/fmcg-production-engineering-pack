@@ -1,0 +1,8 @@
+*.zip
+*.heapsnapshot
+__pycache__/
+node_modules/
+.env
+.env.*
+*.db
+*.log
