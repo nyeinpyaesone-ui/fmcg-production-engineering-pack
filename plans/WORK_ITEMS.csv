@@ -1,5 +1,5 @@
 id,phase,task,owner,depends_on,priority,acceptance_criteria,approval_gate,status,notes
-FMCG-001,0,Confirm repository and authoritative source files,orchestrator,,P0,Repository branch commit and source ownership recorded,no,proposed,
+FMCG-001,0,Confirm repository and authoritative source files,orchestrator,,P0,Repository branch commit and source ownership recorded,no,in_review,See docs/REPOSITORY_RECORD.md; live source branch unconfirmed.
 FMCG-002,0,Approve v1 workflows and operating rules,business-domain-agent,FMCG-001,P0,Order-to-cash and procure-to-pay state maps approved,yes,proposed,
 FMCG-003,1,Create reproducible backend and frontend workspace,devops-agent,FMCG-001,P0,Clean clone installs and builds from lockfiles,no,proposed,
 FMCG-004,1,Pin runtime and dependency versions,devops-agent,FMCG-003,P0,Compatibility matrix approved and lockfiles committed,yes,proposed,Pins blocked by FMCG-003 lockfiles.
