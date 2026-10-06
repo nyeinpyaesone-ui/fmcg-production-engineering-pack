@@ -3,8 +3,9 @@
 **Status:** Planning and governance package derived from the supplied `ERP-FMCG.xml` Repomix export.  
 **Not a compiled application, production release, or proof of deployment.**
 
-> Pack rebuilt 2026-10-05: CI validates this repo's docs only (markdown, YAML, CSV integrity, secret scan). Code CI
-> belongs to the ERP repository.
+> Pack rebuilt 2026-10-05: CI validates this repo's docs (markdown, YAML, CSV integrity, secret scan) plus the Gate 1
+> scaffold's backend checks and frontend typecheck, tests and build. Full ERP application CI belongs to the ERP
+> repository.
 
 ## Scope
 
@@ -22,7 +23,7 @@ product boundaries are confirmed.
 6. `config/agent-policy.yaml` — permissions, approval gates and execution controls.
 7. `docs/QUALITY_AND_RELEASE.md` — test, CI, release and rollback requirements.
 8. `docs/DATA_AND_OPERATIONS.md` — data integrity, operations, backup and observability.
-9. `.github/workflows/quality.yml` — docs lint and integrity checks for this repository.
+9. `.github/workflows/quality.yml` — docs lint, integrity checks, and Gate 1 scaffold backend/frontend checks.
 
 ## Important
 
