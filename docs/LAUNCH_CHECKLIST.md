@@ -14,7 +14,7 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
 - [x] Worktree clean at launch; 51 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
-- [ ] Pull request opened for `feat/gate1-gate2-foundation` → this triggers the first remote CI run.
+- [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
 - [ ] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
 
 ## 2. Governance and approvals
@@ -34,8 +34,9 @@ stays unticked, no matter how confident the narrative sounds.
   green locally: `ruff check`, `mypy --strict`, `pytest -q` (3 passed).
 - [x] Frontend job extended to typecheck, tests and production build; all three proven green locally
   (`tsc -b`, `vitest` 1 passed, `vite build` emitting `dist/`).
-- [ ] First green run of `.github/workflows/quality.yml` on the PR — the authoritative signal for Python 3.11.17
-  and Node 22.23.3, which the developer machine (Python 3.14.4) cannot replicate.
+- [x] First green run of `.github/workflows/quality.yml` on the PR — run `37502034199`, all three jobs passed
+  on the pinned runtimes (Python 3.11.17, Node 22.23.3). Required two CI fixes along the way: `GITHUB_TOKEN` for the
+  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves.
 - [ ] Format gate: `ruff format` configured and invoked; frontend formatter installed and checked in CI
   (tracked deviation in `docs/COMPATIBILITY.md`, required by `config/agent-policy.yaml`).
 - [ ] Workflow yamllint for `.github/workflows/*.yml` (tracked in FMCG-005 notes).
@@ -44,7 +45,7 @@ stays unticked, no matter how confident the narrative sounds.
 ## 4. Security
 
 - [x] No secrets in the tree: pattern scan clean, no `.env` files, `.gitignore` covers env/db/log artifacts.
-- [ ] Gitleaks action result from the first CI run reviewed (local binary unavailable; `Makefile` tolerates this).
+- [x] Gitleaks action green on the first CI run (no leaks found in the scanned range).
 - [ ] Security reporting contact documented (no `SECURITY.md` yet — decide owner and channel).
 
 ## 5. Backend — Gate 1 workspace (FMCG-003 `in_progress`)
@@ -52,13 +53,13 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Runtime and dev pins with hashes compiled by `uv` for Python 3.11.17 (`requirements.txt`,
   `requirements-dev.txt` plus their `.in` sources, all committed).
 - [x] FastAPI `/health` with CORS allow-list and `FMCG_CORS_ORIGINS` override; health test green.
-- [ ] Green backend CI run on the pinned interpreter (pending first PR run).
+- [x] Green backend CI run on the pinned interpreter (run `37502034199`, Python 3.11.17).
 
 ## 6. Frontend — Gate 1 workspace (FMCG-003 `in_progress`)
 
 - [x] `package-lock.json` committed; installed versions match the matrix
   (react 18.3.1, vite 6.0.3, typescript 5.6.3, vitest 3.2.7, jsdom 29.1.1).
-- [ ] Green frontend CI run on Node 22.23.3 (pending first PR run).
+- [x] Green frontend CI run on Node 22.23.3 (run `37502034199`).
 
 ## 7. Database — Gate 2 foundation (FMCG-006 `in_progress`)
 
