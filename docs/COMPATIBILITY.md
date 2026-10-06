@@ -6,23 +6,24 @@ until CI proves compatibility.
 **Status: awaiting human approval (FMCG-004, `approval_gate: yes`).** The *Selected* column records decisions taken on
 2026-10-06. They are selections, not test evidence — see "Verification status" below.
 
-| Component             | Source evidence                                               | Target policy                                           | Selected (2026-10-06)                                           |
-| --------------------- | ------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------- |
-| Python                | 3.11-slim Docker; backend sample pins unspecified interpreter | Choose one supported patch; exact pin across CI/runtime | **3.11.17** — active bugfix support to 2027-10-31               |
-| FastAPI               | 0.115.0                                                       | Pin after compatibility/security review                 | **0.115.6**                                                     |
-| Uvicorn               | 0.30.6                                                        | Pin with tested worker/lifecycle configuration          | **0.32.1** — lifecycle config not yet tested                    |
-| SQLAlchemy            | 2.0.36                                                        | Keep 2.x; pin and test async transaction patterns       | **2.0.54** — 2.0 line; 2.1 held back for maturity               |
-| asyncpg               | 0.29.0                                                        | Pin and test with selected PostgreSQL major             | **0.31.0**                                                      |
-| Alembic               | 1.13.1                                                        | Pin; migration autogeneration must be reviewed          | **1.20.0**                                                      |
-| aiosqlite             | not in export (test-only SQLite driver)                       | Pin test-only; never use in production                  | **0.22.1** — dev lockfile only                                  |
-| Pydantic              | 2.7.4                                                         | Pin compatible with FastAPI/settings package            | **2.13.5** — `pydantic-core` pinned transitively at 2.46.5      |
-| PostgreSQL            | 15                                                            | Select supported major; production image digest pin     | **15** — target major; production digest pending (no image yet) |
-| Redis                 | 7-alpine                                                      | Optional; pin patch/digest if adopted                   | not adopted                                                     |
-| RabbitMQ              | 3-management                                                  | Defer unless durable async use case requires it         | deferred                                                        |
-| Celery                | 5.6.0                                                         | Defer until worker architecture is approved             | deferred                                                        |
-| Node.js               | 22 in nested scaffold CI                                      | Approved LTS patch, exact CI/runtime pin                | **22.23.3** — LTS support to 2027-04-30                         |
-| React/Vite/TypeScript | `latest` in scaffold                                          | Pin exact versions in lockfile; no floating tags        | react **18.3.1**, vite **6.0.3**, typescript **5.6.3**          |
-| GitHub Actions        | checkout@v4/setup-python@v5/setup-node@v4                     | Pin reviewed action SHAs and update deliberately        | pinned to immutable SHAs in `.github/workflows/quality.yml`     |
+| Component             | Source evidence                                               | Target policy                                           | Selected (2026-10-06)                                                                    |
+| --------------------- | ------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Python                | 3.11-slim Docker; backend sample pins unspecified interpreter | Choose one supported patch; exact pin across CI/runtime | **3.11.17** — bugfix support to 2027-10-31; runtime image `3.11.17-slim@sha256:0dd364ba` |
+| FastAPI               | 0.115.0                                                       | Pin after compatibility/security review                 | **0.115.6**                                                                              |
+| Uvicorn               | 0.30.6                                                        | Pin with tested worker/lifecycle configuration          | **0.32.1** — lifecycle config not yet tested                                             |
+| SQLAlchemy            | 2.0.36                                                        | Keep 2.x; pin and test async transaction patterns       | **2.0.54** — 2.0 line; 2.1 held back for maturity                                        |
+| asyncpg               | 0.29.0                                                        | Pin and test with selected PostgreSQL major             | **0.31.0**                                                                               |
+| Alembic               | 1.13.1                                                        | Pin; migration autogeneration must be reviewed          | **1.20.0**                                                                               |
+| aiosqlite             | not in export (test-only SQLite driver)                       | Pin test-only; never use in production                  | **0.22.1** — dev lockfile only                                                           |
+| Pydantic              | 2.7.4                                                         | Pin compatible with FastAPI/settings package            | **2.13.5** — `pydantic-core` pinned transitively at 2.46.5                               |
+| PostgreSQL            | 15                                                            | Select supported major; production image digest pin     | **15** — compose pins `15-alpine@sha256:f7d23353`; production digest recorded at release |
+| nginx                 | not in export (frontend static server)                        | Pin patch and digest; non-root, unprivileged port       | **1.28-alpine@sha256:a8b39bd9**                                                          |
+| Redis                 | 7-alpine                                                      | Optional; pin patch/digest if adopted                   | not adopted                                                                              |
+| RabbitMQ              | 3-management                                                  | Defer unless durable async use case requires it         | deferred                                                                                 |
+| Celery                | 5.6.0                                                         | Defer until worker architecture is approved             | deferred                                                                                 |
+| Node.js               | 22 in nested scaffold CI                                      | Approved LTS patch, exact CI/runtime pin                | **22.23.3** — LTS support to 2027-04-30; build image `22.23.3-slim@sha256:c3de60bf`      |
+| React/Vite/TypeScript | `latest` in scaffold                                          | Pin exact versions in lockfile; no floating tags        | react **18.3.1**, vite **6.0.3**, typescript **5.6.3**                                   |
+| GitHub Actions        | checkout@v4/setup-python@v5/setup-node@v4                     | Pin reviewed action SHAs and update deliberately        | pinned to immutable SHAs in `.github/workflows/quality.yml`                              |
 
 ## Why these versions
 
@@ -57,7 +58,9 @@ that run is green.
   that asserts nothing would not satisfy it. Tracked as an open deviation on FMCG-005.
 - **No frontend `format` gate.** `config/agent-policy.yaml` lists `format` as required. `ruff format` is available in the
   pinned ruff but is not yet configured or invoked, and no frontend formatter is installed.
-- **No production image yet**, so there is no runtime image digest to pin against the 3.11.17 runtime pin.
+- **No image built yet.** Dockerfiles, compose and the release workflow exist with digest-pinned bases, but no
+  image has been built (no local Docker daemon; first build happens in `release.yml` or on the host). Record built
+  image digests here at release time.
 
 ## Recording requirement
 

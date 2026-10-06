@@ -72,9 +72,20 @@ stays unticked, no matter how confident the narrative sounds.
 ## 8. Documentation
 
 - [x] All markdown lint-clean; compatibility selections recorded with explicit verification status and known
-  deviations (no `/ready` endpoint, no format gate, no production image digest yet).
+  deviations (no `/ready` endpoint, no format gate, no built image yet).
 - [x] README scope statement matches reality (docs + Gate 1 scaffold checks in this repo; full ERP CI elsewhere).
 - [ ] Keep the README "Start here" list in sync when adding entry points (`scripts/check_docs.py` enforces this).
+
+## 9. Deployment stage
+
+- [x] Backend Dockerfile (pinned Python, hash-verified install, non-root `appuser`, stdlib healthcheck).
+- [x] Frontend multi-stage Dockerfile (pinned Node build, pinned nginx, non-root `web` on 8080, `/health` proxy).
+- [x] `docker-compose.yml`: private network, no published DB ports, one-shot `migrator`, health-gated startup.
+- [x] `.env.example` with placeholders only; `.env` git-ignored and never baked into images.
+- [x] `release.yml`: tag/manual trigger only, SHA-pinned actions, GHCR push with SBOM and `provenance: mode=max`.
+- [x] `docs/DEPLOYMENT.md`: exact configure → build → backup → migrate → smoke-test → update/rollback procedure.
+- [ ] First image build (no local Docker daemon; happens in `release.yml` or on the deployment host).
+- [ ] Record built image digests, migration range and smoke-test output at release time (Gate 8).
 
 ## Sign-off
 
