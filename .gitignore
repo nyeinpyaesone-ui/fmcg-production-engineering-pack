@@ -4,6 +4,8 @@ __pycache__/
 node_modules/
 .env
 .env.*
+# The example template holds placeholders only and must be committed.
+!.env.example
 *.db
 *.log
 .venv/
