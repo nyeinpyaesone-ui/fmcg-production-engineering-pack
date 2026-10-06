@@ -30,7 +30,8 @@ docker compose build --pull
 
 Base images are digest-pinned in the Dockerfiles, so a rebuild is deterministic; `--pull` refreshes only
 within the pinned digest (a no-op unless the registry serves different bytes for the same digest, which fails
-closed). First image builds happen in CI (`release.yml`) or on the host — there is intentionally no local-only
+closed). This build path is for staging. Production does not build: it pulls the release digests (step 6.5).
+First image builds happen in CI (`release.yml`) or on the host — there is intentionally no local-only
 build cache to trust.
 
 ## 3. Start the database and wait for health
@@ -74,11 +75,14 @@ completed migrator. On failure, collect `docker compose logs backend frontend db
 1. Freeze scope and review the diff plus any migration scripts (Gate 8).
 2. Tag the exact verified commit: `git tag vX.Y.Z && git push origin vX.Y.Z`.
 3. The `release` workflow builds both images with SBOM and `provenance: mode=max` and pushes them to GHCR as
-   `ghcr.io/<owner>/fmcg-erp-backend:<tag>` and `.../fmcg-erp-frontend:<tag>`.
+   `ghcr.io/<owner>/fmcg-erp-backend:<tag>` and `.../fmcg-erp-frontend:<tag>`, mirrored to Docker Hub as
+   `<dockerhub-user>/fmcg-erp-backend:<tag>` and `<dockerhub-user>/fmcg-erp-frontend:<tag>`.
+   (Requires the `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repository secrets, set by the owner.)
 4. Record the image digests (from the workflow summary), migration range, SBOM reference and smoke-test output
    in `docs/COMPATIBILITY.md` and the release notes before rollout.
-5. Deploy the tag with steps 2–5 above. GHCR images are the immutable release evidence; host builds from the
-   same tag must produce the same digests.
+5. Deploy by digest, not by rebuild: set `BACKEND_IMAGE` / `FRONTEND_IMAGE` in `.env` to the recorded digest
+   refs, then `docker compose pull` followed by steps 3–5 above (migrate, start, smoke-test). The registry
+   artifacts are the immutable release evidence; a host rebuild from the same tag must produce the same digests.
 
 ## 7. Update and rollback
 

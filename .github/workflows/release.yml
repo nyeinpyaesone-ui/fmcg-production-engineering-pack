@@ -12,7 +12,23 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 jobs:
+  # Fails closed unless the quality workflow succeeded on the exact commit
+  # being released. This intentionally blocks manual dispatches from commits
+  # without a green quality run. jq -e exits nonzero when false, failing the job.
+  verify-quality:
+    runs-on: ubuntu-latest
+    # Least privilege: gh run list needs actions:read, which the top-level
+    # contents:read does not grant.
+    permissions:
+      actions: read
+    steps:
+      - name: Verify quality workflow succeeded on this commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run list --commit ${{ github.sha }} --workflow quality.yml --status completed --json conclusion --jq -e '[.[].conclusion] | index("success") != null'
   build-and-push:
+    needs: verify-quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
@@ -25,11 +41,20 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Docker Hub mirror. Credentials live only as repository secrets
+      # (DOCKERHUB_USERNAME / DOCKERHUB_TOKEN), set by the owner via
+      # `gh secret set` — values never appear in this file or its logs.
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9  # v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Backend metadata
         id: backend-meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051  # v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/fmcg-erp-backend
+          images: |
+            ghcr.io/${{ github.repository_owner }}/fmcg-erp-backend
+            powerrangeranikg/fmcg-erp-backend
           tags: |
             type=ref,event=tag
             type=sha,prefix=
@@ -37,7 +62,9 @@ jobs:
         id: frontend-meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051  # v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/fmcg-erp-frontend
+          images: |
+            ghcr.io/${{ github.repository_owner }}/fmcg-erp-frontend
+            powerrangeranikg/fmcg-erp-frontend
           tags: |
             type=ref,event=tag
             type=sha,prefix=

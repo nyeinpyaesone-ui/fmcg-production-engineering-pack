@@ -2,6 +2,12 @@
 # The database and backend stay on a private network; only the frontend port
 # is published. Secrets come from `.env` (see `.env.example`) and are never
 # committed. Build contexts are the repository root (see Dockerfiles).
+#
+# Image selection: each buildable service declares both `build:` and `image:`.
+# Staging builds locally (`docker compose build`, tagged with the default names
+# below). Production pulls the immutable release artifacts instead: set
+# BACKEND_IMAGE / FRONTEND_IMAGE to the GHCR digest refs recorded at release
+# time and run `docker compose pull` (see docs/DEPLOYMENT.md step 5).
 name: fmcg-erp
 
 services:
@@ -23,6 +29,7 @@ services:
       retries: 5
 
   migrator:
+    image: ${BACKEND_IMAGE:-fmcg-erp-backend:local}
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -37,6 +44,7 @@ services:
     command: ["alembic", "-c", "alembic.ini", "upgrade", "head"]
 
   backend:
+    image: ${BACKEND_IMAGE:-fmcg-erp-backend:local}
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -51,6 +59,7 @@ services:
       - internal
 
   frontend:
+    image: ${FRONTEND_IMAGE:-fmcg-erp-frontend:local}
     build:
       context: .
       dockerfile: frontend/Dockerfile

@@ -10,9 +10,9 @@ stays unticked, no matter how confident the narrative sounds.
 ## 1. Repository and remote
 
 - [x] Public repository created: `nyeinpyaesone-ui/fmcg-production-engineering-pack` (visibility PUBLIC).
-- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`274b91d`) pushed with tracking configured.
+- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`e66d495`) pushed with tracking configured.
 - [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
-- [x] Worktree clean at launch; 51 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
+- [x] Worktree clean at launch; 65 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
 - [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
 - [ ] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
@@ -46,7 +46,8 @@ stays unticked, no matter how confident the narrative sounds.
 
 - [x] No secrets in the tree: pattern scan clean, no `.env` files, `.gitignore` covers env/db/log artifacts.
 - [x] Gitleaks action green on the first CI run (no leaks found in the scanned range).
-- [ ] Security reporting contact documented (no `SECURITY.md` yet — decide owner and channel).
+- [ ] Security reporting contact documented (`docs/SECURITY.md` exists; root `SECURITY.md` contact channel
+  pending — decide owner).
 
 ## 5. Backend — Gate 1 workspace (FMCG-003 `in_progress`)
 
@@ -84,6 +85,8 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] `docker-compose.yml`: private network, no published DB ports, one-shot `migrator`, health-gated startup.
 - [x] `.env.example` with placeholders only; `.env` git-ignored and never baked into images.
 - [x] `release.yml`: tag/manual trigger only, SHA-pinned actions, GHCR push with SBOM and `provenance: mode=max`.
+- [x] Docker Hub mirror wired in `release.yml` (image names only — credentials stay in repository secrets).
+- [ ] Owner sets `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repository secrets and confirms the first mirrored push.
 - [x] `docs/DEPLOYMENT.md`: exact configure → build → backup → migrate → smoke-test → update/rollback procedure.
 - [ ] First image build (no local Docker daemon; happens in `release.yml` or on the deployment host).
 - [ ] Record built image digests, migration range and smoke-test output at release time (Gate 8).

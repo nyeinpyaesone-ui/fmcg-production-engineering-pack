@@ -28,6 +28,28 @@ product boundaries are confirmed.
 11. `.github/pull_request_template.md` — PR format: task IDs, evidence, risks and approvals.
 12. `docs/DEPLOYMENT.md` — single-host deployment runbook: configure, build, backup, migrate, verify, rollback.
 
+## Playbooks
+
+- `docs/PROJECT_STRUCTURE.md` — repository layout and directory ownership.
+- `docs/SPRINT_SETUP.md` — sprint cadence and work-item flow.
+- `docs/ENV_SETUP.md` — clean-clone developer environment setup.
+- `docs/DEV_FLOW.md` — branch to pull-request to merge.
+- `docs/API_CONTRACT.md` — API versioning and compatibility rules.
+- `docs/DATABASE_MANAGEMENT.md` — migration discipline and review rules.
+- `docs/SECURITY.md` — vulnerability reporting and standing rules.
+- `docs/TESTING_STRATEGY.md` — test pyramid and runnable commands.
+- `docs/QA.md` — independent verification before every gate.
+- `docs/CODE_REVIEW.md` — review checklist for safe merges.
+- `docs/CICD.md` — pipeline map and incident history.
+- `docs/RELEASE_MANAGEMENT.md` — versioning, tagging and evidence bundle.
+- `docs/MONITORING.md` — per-service signals and pending thresholds.
+- `docs/BACKUP_RECOVERY.md` — backup policy with concrete commands.
+- `docs/PERFORMANCE.md` — budgets and load-test plan.
+- `docs/DISASTER_RECOVERY.md` — scenarios and restore hierarchy.
+- `docs/MAINTENANCE.md` — dependency and image upkeep commands.
+- `docs/DOCUMENTATION.md` — docs standards and enforcement gates.
+- `docs/ISSUE_MANAGEMENT.md` — templates, triage and linkage rules.
+
 ## Important
 
 The uploaded XML is a read-only packed representation. Changes belong in the original repository, not in this export. Do
