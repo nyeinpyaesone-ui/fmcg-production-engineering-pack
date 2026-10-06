@@ -24,6 +24,8 @@ product boundaries are confirmed.
 7. `docs/QUALITY_AND_RELEASE.md` — test, CI, release and rollback requirements.
 8. `docs/DATA_AND_OPERATIONS.md` — data integrity, operations, backup and observability.
 9. `.github/workflows/quality.yml` — docs lint, integrity checks, and Gate 1 scaffold backend/frontend checks.
+10. `docs/LAUNCH_CHECKLIST.md` — launch readiness checklist with verified evidence and pending gates.
+11. `.github/pull_request_template.md` — PR format: task IDs, evidence, risks and approvals.
 
 ## Important
 
