@@ -37,6 +37,8 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] First green run of `.github/workflows/quality.yml` on the PR — run `37502034199`, all three jobs passed
   on the pinned runtimes (Python 3.11.17, Node 22.23.3). Required two CI fixes along the way: `GITHUB_TOKEN` for the
   gitleaks PR scan and `fetch-depth: 0` so the scan range resolves.
+- [x] `containers` job green on run `37531441414`: both Dockerfiles build on runners (no push). Dockerfile
+  breakage can no longer reach release silently.
 - [ ] Format gate: `ruff format` configured and invoked; frontend formatter installed and checked in CI
   (tracked deviation in `docs/COMPATIBILITY.md`, required by `config/agent-policy.yaml`).
 - [ ] Workflow yamllint for `.github/workflows/*.yml` (tracked in FMCG-005 notes).
@@ -88,7 +90,8 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Docker Hub mirror wired in `release.yml` (image names only — credentials stay in repository secrets).
 - [ ] Owner sets `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repository secrets and confirms the first mirrored push.
 - [x] `docs/DEPLOYMENT.md`: exact configure → build → backup → migrate → smoke-test → update/rollback procedure.
-- [ ] First image build (no local Docker daemon; happens in `release.yml` or on the deployment host).
+- [ ] First published image build (images proven buildable in CI, run `37531441414`; first pushed release
+  build happens in `release.yml` or on the deployment host).
 - [ ] Record built image digests, migration range and smoke-test output at release time (Gate 8).
 
 ## Sign-off
