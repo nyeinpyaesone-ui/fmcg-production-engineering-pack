@@ -57,7 +57,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/fmcg-erp-backend
-            powerrangeranikg/fmcg-erp-backend
+            ${{ vars.DOCKERHUB_NAMESPACE }}/fmcg-erp-backend
           tags: |
             type=ref,event=tag
             type=sha,prefix=
@@ -67,7 +67,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/fmcg-erp-frontend
-            powerrangeranikg/fmcg-erp-frontend
+            ${{ vars.DOCKERHUB_NAMESPACE }}/fmcg-erp-frontend
           tags: |
             type=ref,event=tag
             type=sha,prefix=
