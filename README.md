@@ -27,6 +27,8 @@ product boundaries are confirmed.
 10. `docs/LAUNCH_CHECKLIST.md` — launch readiness checklist with verified evidence and pending gates.
 11. `.github/pull_request_template.md` — PR format: task IDs, evidence, risks and approvals.
 12. `docs/DEPLOYMENT.md` — single-host deployment runbook: configure, build, backup, migrate, verify, rollback.
+13. `docs/LIFECYCLE.md` — full software life cycle with owners and exit criteria.
+14. `CHANGELOG.md` — notable changes per release.
 
 ## Playbooks
 

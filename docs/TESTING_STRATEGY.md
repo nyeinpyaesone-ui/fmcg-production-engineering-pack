@@ -24,6 +24,9 @@ npm run check --prefix frontend && npm test --prefix frontend && npm run build -
 npx markdownlint-cli2 "README.md" "docs/**/*.md" ".agents/**/*.md" && python3 scripts/check_docs.py
 ```
 
+Loop runner `scripts/verify_all.sh` executes all of the above with per-suite retries and `EVENT` lines
+(`BUILD_FRONTEND=1` includes the production build); it exits nonzero if anything stays red.
+
 ## Rules
 
 1. New behavior ships with tests for success, validation failure, authorization denial and (for money/stock)

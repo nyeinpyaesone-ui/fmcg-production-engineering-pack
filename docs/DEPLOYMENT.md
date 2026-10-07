@@ -73,7 +73,8 @@ completed migrator. On failure, collect `docker compose logs backend frontend db
 ## 6. Release flow (immutable artifacts)
 
 1. Freeze scope and review the diff plus any migration scripts (Gate 8).
-2. Tag the exact verified commit: `git tag vX.Y.Z && git push origin vX.Y.Z`.
+2. Run the pre-tag gate, then tag the exact verified commit (tagging needs explicit human approval):
+   `sh scripts/release_check.sh vX.Y.Z && git tag vX.Y.Z && git push origin vX.Y.Z`.
 3. The `release` workflow builds both images with SBOM and `provenance: mode=max` and pushes them to GHCR as
    `ghcr.io/<owner>/fmcg-erp-backend:<tag>` and `.../fmcg-erp-frontend:<tag>`, mirrored to Docker Hub as
    `<dockerhub-user>/fmcg-erp-backend:<tag>` and `<dockerhub-user>/fmcg-erp-frontend:<tag>`.
