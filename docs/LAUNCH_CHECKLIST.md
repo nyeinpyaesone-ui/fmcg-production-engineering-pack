@@ -17,7 +17,10 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
 - [x] `main` branch protection registered on the platform: 1 approving review, all 5 CI jobs required
   and strict, enforced for admins, no force-pushes or deletions.
-- [ ] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
+- [x] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
+  Owner reviewed PR contents, granted FMCG-004 sign-off, and directed the merge (`continue to merge`, 2026-10-07).
+  Solo-owner repo: GitHub self-approval is impossible, so approval is recorded here + in `plans/WORK_ITEMS.csv`;
+  platform requires green CI on all 5 jobs regardless.
 
 ## 2. Governance and approvals
 
