@@ -10,7 +10,7 @@ stays unticked, no matter how confident the narrative sounds.
 ## 1. Repository and remote
 
 - [x] Public repository created: `nyeinpyaesone-ui/fmcg-production-engineering-pack` (visibility PUBLIC).
-- [x] `main` (`55dd433`, PRs #1–#2 merged) and feature branches pushed with tracking configured.
+- [x] `main` (`6dabbf7`, PRs #1–#3 merged) and feature branches pushed with tracking configured.
 - [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
 - [x] Worktree clean at launch; 93 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
