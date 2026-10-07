@@ -15,12 +15,15 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", database_url())
+# The URL is read lazily inside the run functions (never at import), so plain
+# inspection commands work without FMCG_DATABASE_URL set. Migration runs still
+# fail closed when it is missing or invalid.
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode (SQL script rendering)."""
+    config.set_main_option("sqlalchemy.url", database_url())
     url = config.get_main_option("sqlalchemy.url")
     context.configure(url=url, target_metadata=target_metadata, literal_binds=True, compare_type=True)
     with context.begin_transaction():
@@ -36,6 +39,7 @@ def do_run_migrations(connection: Connection) -> None:
 
 async def run_migrations_online() -> None:
     """Run migrations in 'online' mode over an async engine."""
+    config.set_main_option("sqlalchemy.url", database_url())
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

@@ -6,16 +6,18 @@ Two workflows exist in `.github/workflows/`. Both use SHA-pinned actions; re-pin
 
 - Triggers: `pull_request` targeting `main`, and `push` to `main`.
 - Permissions are read-only (`contents: read`); concurrency cancels superseded runs per ref.
-- Three jobs, all required before merge:
-  - `docs`: yamllint on `config/agent-policy.yaml`, markdownlint over README/docs/agents,
+- Five jobs, all required before merge (plus `migration-pg`, below):
+  - `docs`: yamllint on `config/agent-policy.yaml` and both workflows, markdownlint over README/docs/agents,
     `python3 scripts/check_docs.py`, then the gitleaks secret scan.
   - `backend`: Python `3.11.17` (`actions/setup-python`), installs `backend/requirements-dev.txt`,
-    then `ruff check`, `mypy app` (strict) and `pytest -q`.
+    then `ruff check`, `ruff format --check`, `mypy app` (strict) and `pytest -q`.
   - `frontend`: Node `22.23.3` (`actions/setup-node` with npm cache on `frontend/package-lock.json`),
-    then `npm ci`, `npm run check` (`tsc -b`), `npm test` (vitest), `npm run build` (vite).
-- Pinned SHAs today: checkout `11bd7190`, setup-python `0b93645e`, setup-node `60edb5dd`,
-  gitleaks-action `ff98106e`. Two of these still carry a TODO: verify and pin the setup-python and
-  gitleaks SHAs to reviewed immutable values before release (tracked in `docs/LAUNCH_CHECKLIST.md`).
+    then `npm ci`, typecheck, Prettier check, tests, production build.
+  - `containers`: both Dockerfiles build (dummy POSTGRES_* satisfy fail-closed interpolation, no push).
+  - `migration-pg`: full upgrade/downgrade cycle on ephemeral PostgreSQL 15.
+- Pinned SHAs verified 2026-10-07 (checkout `11bd7190`, setup-python `0b93645e`, setup-node `60edb5dd`,
+  gitleaks-action `ff98106e` kept immutable with upstream tag drift noted, buildx/login/metadata/build-push).
+  Re-pin only via reviewed PRs (see `docs/MAINTENANCE.md`).
 
 ## `release.yml` — tags only
 

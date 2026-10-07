@@ -6,6 +6,8 @@ import { App } from "./App";
 describe("App", () => {
   it("renders the scaffold heading", () => {
     render(<App />);
-    expect(screen.getByRole("heading", { name: /scaffold/i })).toBeDefined();
+    const heading = screen.getByRole("heading", { name: /scaffold/i });
+    expect(heading).toBeInTheDocument();
+    expect(heading).toBeVisible();
   });
 });

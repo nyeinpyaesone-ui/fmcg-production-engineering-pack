@@ -15,7 +15,7 @@ COPY --from=build /srv/web/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN addgroup -S web && adduser -S -G web web \
-  && chown -R web:web /usr/share/nginx/html /var/cache/nginx /etc/nginx/conf.d \
+  && chown -R web:web /usr/share/nginx/html /var/cache/nginx /etc/nginx/conf.d /var/log/nginx /var/tmp \
   && mkdir -p /var/run \
   && touch /var/run/nginx.pid \
   && chown web:web /var/run/nginx.pid
