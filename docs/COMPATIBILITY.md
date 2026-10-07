@@ -61,6 +61,11 @@ that run is green.
 - **No image built yet.** Dockerfiles, compose and the release workflow exist with digest-pinned bases, but no
   image has been built (no local Docker daemon; first build happens in `release.yml` or on the host). Record built
   image digests here at release time.
+- **npm audit findings are dev-toolchain-only and tracked, not silently fixed.** `npm audit` reports 5 advisories
+  (vitest/mocker path traversal, tinypool, esbuild and vite dev-server issues) — all confined to the local
+  dev/test toolchain, none shipped in the nginx production image. Fixing them means moving the vite 6.0.3 /
+  vitest 3.2.7 pins, which requires re-validating peer constraints through a reviewed dependency PR
+  (threat-model input for FMCG-015, monthly review per `docs/MAINTENANCE.md`).
 
 ## Recording requirement
 

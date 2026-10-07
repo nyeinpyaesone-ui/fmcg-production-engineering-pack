@@ -54,7 +54,7 @@ services:
         condition: service_healthy
     environment:
       FMCG_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:?POSTGRES_USER is required}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@db:5432/${POSTGRES_DB:-fmcg}
-      FMCG_CORS_ORIGINS: ${FMCG_CORS_ORIGINS:-http://localhost:8080}
+      FMCG_CORS_ORIGINS: ${FMCG_CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
     networks:
       - internal
 

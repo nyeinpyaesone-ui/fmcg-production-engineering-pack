@@ -7,7 +7,7 @@ from app.core.config import database_url
 
 def create_engine(url: str | None = None) -> AsyncEngine:
     """Create an async engine for the configured database (asyncpg in production)."""
-    return create_async_engine(url or database_url(), pool_pre_ping=True)
+    return create_async_engine((url or "").strip() or database_url(), pool_pre_ping=True)
 
 
 def session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
