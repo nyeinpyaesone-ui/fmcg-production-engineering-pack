@@ -2,7 +2,7 @@
 
 Recorded 2026-10-05, pack HEAD `d6cbb29`.
 
-> Update 2026-10-07: PRs #1 and #2 are merged — `main` is now `55dd433` (Gate 1/2 scaffold, deployment
+> Update 2026-10-07: PRs #1–#3 are merged — `main` is now `6dabbf7` (Gate 1/2 scaffold, deployment
 > stage, hardening, all CI green). The inventory below describes the Gate 0 HEAD only and is kept for history;
 > see `docs/PROJECT_STRUCTURE.md` for the current layout.
 
