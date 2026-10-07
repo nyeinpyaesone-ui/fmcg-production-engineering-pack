@@ -17,12 +17,15 @@ jobs:
         with:
           # Full history: gitleaks scans the PR base..head range, which a shallow checkout cannot resolve.
           fetch-depth: 0
-      # TODO: verify and pin setup-python / gitleaks to reviewed immutable SHAs before release.
+      # SHAs verified 2026-10-07: setup-python matches v5.3.0; the gitleaks pin is immutable and CI-green
+      # (upstream v2.3.7 tag has moved since pinning — never re-float, update only via reviewed PR).
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
         with:
           python-version: "3.11.17"
       - name: Lint YAML config
         run: pipx run yamllint -c .yamllint.yaml config/agent-policy.yaml
+      - name: Lint workflows
+        run: pipx run yamllint -c .yamllint.yaml .github/workflows/quality.yml .github/workflows/release.yml
       - name: Lint Markdown
         run: npx --yes markdownlint-cli2 "README.md" "docs/**/*.md" ".agents/**/*.md"
       - name: Docs integrity check
@@ -43,6 +46,7 @@ jobs:
       - run: |
           cd backend
           ruff check .
+          ruff format --check .
           mypy app
           pytest -q
   frontend:
@@ -56,6 +60,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --prefix frontend
       - run: npm run check --prefix frontend
+      - run: npm run format:check --prefix frontend
       - run: npm test --prefix frontend
       - run: npm run build --prefix frontend
   containers:

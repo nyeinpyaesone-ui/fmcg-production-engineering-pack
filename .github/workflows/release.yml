@@ -26,7 +26,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh run list --commit ${{ github.sha }} --workflow quality.yml --status completed --json conclusion --jq -e '[.[].conclusion] | index("success") != null'
+          gh run list --commit ${{ github.sha }} \
+            --workflow quality.yml --status completed \
+            --json conclusion \
+            --jq -e '[.[].conclusion] | index("success") != null'
   build-and-push:
     needs: verify-quality
     runs-on: ubuntu-latest

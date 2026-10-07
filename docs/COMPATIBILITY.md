@@ -56,8 +56,8 @@ that run is green.
 - **Health and readiness are not separated.** `/health` is liveness only and probes no dependencies, because no external
   dependency exists yet. `docs/QUALITY_AND_RELEASE.md` requires verified health/readiness semantics; a `/ready` endpoint
   that asserts nothing would not satisfy it. Tracked as an open deviation on FMCG-005.
-- **No frontend `format` gate.** `config/agent-policy.yaml` lists `format` as required. `ruff format` is available in the
-  pinned ruff but is not yet configured or invoked, and no frontend formatter is installed.
+- **Format gates landed.** `ruff format --check` runs in backend CI and Prettier `format:check` (3.9.9, dev
+  lockfile) in frontend CI. Previously tracked here as missing against the `format` quality gate.
 - **No image built yet.** Dockerfiles, compose and the release workflow exist with digest-pinned bases, but no
   image has been built (no local Docker daemon; first build happens in `release.yml` or on the host). Record built
   image digests here at release time.

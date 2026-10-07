@@ -1,0 +1,2 @@
+# Prettier ignores node_modules by default; dist/ is build output.
+dist/
