@@ -10,9 +10,9 @@ stays unticked, no matter how confident the narrative sounds.
 ## 1. Repository and remote
 
 - [x] Public repository created: `nyeinpyaesone-ui/fmcg-production-engineering-pack` (visibility PUBLIC).
-- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`e66d495`) pushed with tracking configured.
+- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`8f38b62`) pushed with tracking configured.
 - [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
-- [x] Worktree clean at launch; 65 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
+- [x] Worktree clean at launch; 85 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
 - [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
 - [ ] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
@@ -36,7 +36,8 @@ stays unticked, no matter how confident the narrative sounds.
   (`tsc -b`, `vitest` 1 passed, `vite build` emitting `dist/`).
 - [x] First green run of `.github/workflows/quality.yml` on the PR — run `37502034199`, all three jobs passed
   on the pinned runtimes (Python 3.11.17, Node 22.23.3). Required two CI fixes along the way: `GITHUB_TOKEN` for the
-  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves.
+  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves. Latest green run `37531673773` (all four jobs,
+  current tip).
 - [x] `containers` job green on run `37531441414`: both Dockerfiles build on runners (no push). Dockerfile
   breakage can no longer reach release silently.
 - [ ] Format gate: `ruff format` configured and invoked; frontend formatter installed and checked in CI
@@ -56,13 +57,13 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Runtime and dev pins with hashes compiled by `uv` for Python 3.11.17 (`requirements.txt`,
   `requirements-dev.txt` plus their `.in` sources, all committed).
 - [x] FastAPI `/health` with CORS allow-list and `FMCG_CORS_ORIGINS` override; health test green.
-- [x] Green backend CI run on the pinned interpreter (run `37502034199`, Python 3.11.17).
+- [x] Green backend CI run on the pinned interpreter (run `37531673773`, Python 3.11.17).
 
 ## 6. Frontend — Gate 1 workspace (FMCG-003 `in_progress`)
 
 - [x] `package-lock.json` committed; installed versions match the matrix
   (react 18.3.1, vite 6.0.3, typescript 5.6.3, vitest 3.2.7, jsdom 29.1.1).
-- [x] Green frontend CI run on Node 22.23.3 (run `37502034199`).
+- [x] Green frontend CI run on Node 22.23.3 (run `37531673773`).
 
 ## 7. Database — Gate 2 foundation (FMCG-006 `in_progress`)
 
@@ -90,7 +91,7 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Docker Hub mirror wired in `release.yml` (image names only — credentials stay in repository secrets).
 - [ ] Owner sets `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repository secrets and confirms the first mirrored push.
 - [x] `docs/DEPLOYMENT.md`: exact configure → build → backup → migrate → smoke-test → update/rollback procedure.
-- [ ] First published image build (images proven buildable in CI, run `37531441414`; first pushed release
+- [ ] First published image build (images proven buildable in CI, run `37531673773`; first pushed release
   build happens in `release.yml` or on the deployment host).
 - [ ] Record built image digests, migration range and smoke-test output at release time (Gate 8).
 

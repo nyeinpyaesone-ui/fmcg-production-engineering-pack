@@ -32,7 +32,8 @@ Two workflows exist in `.github/workflows/`. Both use SHA-pinned actions; re-pin
 - Gitleaks on PR events failed without credentials: the step now passes
   `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}` (gitleaks-action requires it for `pull_request` scans).
 - Gitleaks scanned an unresolvable range on shallow checkouts: the docs job now sets `fetch-depth: 0`
-  so the PR base..head range resolves. First green run: `37502034199` (Python 3.11.17, Node 22.23.3).
+  so the PR base..head range resolves. First green run `37502034199`; latest green run `37531673773`
+  (Python 3.11.17, Node 22.23.3).
 
 ## How to read a run
 
