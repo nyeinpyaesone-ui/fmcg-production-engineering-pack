@@ -1,0 +1,8 @@
+# Keep the production image minimal: no tests, caches or bytecode.
+__pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+tests/

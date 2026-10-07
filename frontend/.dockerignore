@@ -1,0 +1,3 @@
+# Keep the build context small: dependencies install from the lockfile.
+node_modules/
+dist/

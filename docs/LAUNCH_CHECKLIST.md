@@ -1,0 +1,109 @@
+# Launch Checklist — FMCG Production Engineering Pack
+
+A launch here means the repository is public, reproducible and honestly described — **not** production-ready.
+Production readiness is defined separately in `docs/IMPLEMENTATION_PLAN.md` (Gates 0–8) and is not claimed by this
+checklist.
+
+How to use: tick a box only with linked evidence (commit SHA, CI run URL, command output). Anything without evidence
+stays unticked, no matter how confident the narrative sounds.
+
+## 1. Repository and remote
+
+- [x] Public repository created: `nyeinpyaesone-ui/fmcg-production-engineering-pack` (visibility PUBLIC).
+- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`87b60f5`) pushed with tracking configured.
+- [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
+- [x] Worktree clean at launch; 90 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
+  (root `.gitignore` plus tool-generated nested ignores).
+- [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
+- [x] `main` branch protection registered on the platform: 1 approving review, all 5 CI jobs required
+  and strict, enforced for admins, no force-pushes or deletions.
+- [x] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
+  Owner reviewed PR contents, granted FMCG-004 sign-off, and directed the merge (`continue to merge`, 2026-10-07).
+  Solo-owner repo: GitHub self-approval is impossible, so approval is recorded here + in `plans/WORK_ITEMS.csv`;
+  platform requires green CI on all 5 jobs regardless.
+
+## 2. Governance and approvals
+
+- [x] Agent contracts (`.agents/`), operating model, task backlog (`plans/WORK_ITEMS.csv`) and policy
+  (`config/agent-policy.yaml`, human-supervised, default-deny) are in place.
+- [ ] FMCG-001 `in_review`: confirm authoritative branch/commit of `/home/admin/ERP`, deployment target,
+  tenancy/branch model, user count, transaction volume and RPO/RTO. Partial evidence gathered: role default is
+  `"user"` (`models.py:28`) and payment totals aggregate (`routers/payments.py:112`) in that repo.
+- [ ] FMCG-002: v1 workflows and operating rules approved by the business owner (`approval_gate: yes`).
+- [x] FMCG-004: compatibility selections approved by a human (`approval_gate: yes`) with green CI —
+  approved 2026-10-07.
+
+## 3. CI and delivery
+
+- [x] Docs job defined and green locally: yamllint, markdownlint (15 files, 0 issues), `check_docs.py`, gitleaks action.
+- [x] Backend job repaired (installs the dev lockfile so `ruff`/`mypy`/`pytest` exist) and its exact steps proven
+  green locally: `ruff check`, `mypy --strict`, `pytest -q` (3 passed).
+- [x] Frontend job extended to typecheck, tests and production build; all three proven green locally
+  (`tsc -b`, `vitest` 1 passed, `vite build` emitting `dist/`).
+- [x] First green run of `.github/workflows/quality.yml` on the PR — run `37502034199`, all three jobs passed
+  on the pinned runtimes (Python 3.11.17, Node 22.23.3). Required two CI fixes along the way: `GITHUB_TOKEN` for the
+  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves. Runs have stayed green on every push since
+  (e.g. run `37580936839`, all five jobs).
+- [x] `containers` job green on run `37531441414`: both Dockerfiles build on runners (no push). Dockerfile
+  breakage can no longer reach release silently.
+- [x] Format gate: `ruff format --check` in backend CI, Prettier `format:check` (3.9.9) in frontend CI —
+  green on run `37580405091`. Workflow yamllint covers both workflows (same run).
+- [ ] Workflow yamllint for `.github/workflows/*.yml` (tracked in FMCG-005 notes).
+- [ ] Review and pin the `setup-python`/gitleaks action SHAs flagged TODO in `quality.yml` before release.
+
+## 4. Security
+
+- [x] No secrets in the tree: pattern scan clean, no `.env` files, `.gitignore` covers env/db/log artifacts.
+- [x] Gitleaks action green on the first CI run (no leaks found in the scanned range).
+- [ ] Security reporting contact documented (`docs/SECURITY.md` exists; root `SECURITY.md` contact channel
+  pending — decide owner).
+
+## 5. Backend — Gate 1 workspace (FMCG-003 `in_progress`)
+
+- [x] Runtime and dev pins with hashes compiled by `uv` for Python 3.11.17 (`requirements.txt`,
+  `requirements-dev.txt` plus their `.in` sources, all committed).
+- [x] FastAPI `/health` with CORS allow-list and `FMCG_CORS_ORIGINS` override; health test green.
+- [x] Green backend CI run on the pinned interpreter (run `37531673773`, Python 3.11.17).
+
+## 6. Frontend — Gate 1 workspace (FMCG-003 `in_progress`)
+
+- [x] `package-lock.json` committed; installed versions match the matrix
+  (react 18.3.1, vite 6.0.3, typescript 5.6.3, vitest 3.2.7, jsdom 29.1.1).
+- [x] Green frontend CI run on Node 22.23.3 (run `37531673773`).
+
+## 7. Database — Gate 2 foundation (FMCG-006 `in_progress`)
+
+- [x] Single metadata registry with naming conventions (`app/db/base.py`).
+- [x] Fail-closed database configuration (`FMCG_DATABASE_URL` required, no silent default).
+- [x] Async Alembic environment with `0001` empty anchor revision; tables start at FMCG-008.
+- [x] Empty-database upgrade and downgrade/re-upgrade harness green locally (isolated SQLite file, same async path).
+- [x] CLI `alembic upgrade head` and fail-closed refusal without the env var both demonstrated.
+- [x] Disposable-PostgreSQL migration verification green in CI (run `37580771259`, `migration-pg` job:
+  upgrade/downgrade cycle on ephemeral `postgres:15-alpine`). SQLite harness remains the fast local check.
+
+## 8. Documentation
+
+- [x] All markdown lint-clean; compatibility selections recorded with explicit verification status and known
+  deviations (no `/ready` endpoint, no format gate, no built image yet).
+- [x] README scope statement matches reality (docs + Gate 1 scaffold checks in this repo; full ERP CI elsewhere).
+- [ ] Keep the README "Start here" list in sync when adding entry points (`scripts/check_docs.py` enforces this).
+
+## 9. Deployment stage
+
+- [x] Backend Dockerfile (pinned Python, hash-verified install, non-root `appuser`, stdlib healthcheck).
+- [x] Frontend multi-stage Dockerfile (pinned Node build, pinned nginx, non-root `web` on 8080, `/health` proxy).
+- [x] `docker-compose.yml`: private network, no published DB ports, one-shot `migrator`, health-gated startup.
+- [x] `.env.example` with placeholders only; `.env` git-ignored and never baked into images.
+- [x] `release.yml`: tag/manual trigger only, SHA-pinned actions, GHCR push with SBOM and `provenance: mode=max`.
+- [x] Docker Hub mirror wired in `release.yml` (image names only — credentials stay in repository secrets).
+- [ ] Owner sets `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repository secrets and confirms the first mirrored push.
+- [x] `docs/DEPLOYMENT.md`: exact configure → build → backup → migrate → smoke-test → update/rollback procedure.
+- [ ] First published image build (images proven buildable in CI, run `37531673773`; first pushed release
+  build happens in `release.yml` or on the deployment host).
+- [ ] Record built image digests, migration range and smoke-test output at release time (Gate 8).
+
+## Sign-off
+
+- Release owner: _pending_
+- Decision (launch / launch with exceptions / hold): _pending_
+- Date and evidence links: _pending_

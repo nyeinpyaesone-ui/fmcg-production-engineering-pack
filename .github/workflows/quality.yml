@@ -14,29 +14,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      # TODO: verify and pin setup-python / gitleaks to reviewed immutable SHAs before release.
+        with:
+          # Full history: gitleaks scans the PR base..head range, which a shallow checkout cannot resolve.
+          fetch-depth: 0
+      # SHAs verified 2026-10-07: setup-python matches v5.3.0; the gitleaks pin is immutable and CI-green
+      # (upstream v2.3.7 tag has moved since pinning — never re-float, update only via reviewed PR).
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
         with:
-          python-version: "3.11"
+          python-version: "3.11.17"
       - name: Lint YAML config
         run: pipx run yamllint -c .yamllint.yaml config/agent-policy.yaml
+      - name: Lint workflows
+        run: pipx run yamllint -c .yamllint.yaml .github/workflows/quality.yml .github/workflows/release.yml
       - name: Lint Markdown
         run: npx --yes markdownlint-cli2 "README.md" "docs/**/*.md" ".agents/**/*.md"
       - name: Docs integrity check
         run: python3 scripts/check_docs.py
       - name: Secret scan
         uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.7
+        env:
+          # Required by gitleaks-action to scan pull_request events.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
         with:
-          python-version: "3.11"
-      - run: pip install -r backend/requirements.txt
+          python-version: "3.11.17"
+      - run: pip install -r backend/requirements-dev.txt
       - run: |
           cd backend
           ruff check .
+          ruff format --check .
           mypy app
           pytest -q
   frontend:
@@ -45,8 +55,50 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8  # v4.0.2
         with:
-          node-version: "22"
+          node-version: "22.23.3"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --prefix frontend
       - run: npm run check --prefix frontend
+      - run: npm run format:check --prefix frontend
+      - run: npm test --prefix frontend
+      - run: npm run build --prefix frontend
+  migration-pg:
+    # Proves migrations against real PostgreSQL, closing the SQLite-only dialect risk (FMCG-006).
+    # Credentials are validation-only dummies for an ephemeral CI service, never secrets.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-dummy-change-me
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.11.17"
+      - run: pip install -r backend/requirements-dev.txt
+      - run: |
+          cd backend
+          export FMCG_DATABASE_URL="postgresql+asyncpg://ci:ci-dummy-change-me@127.0.0.1:5432/ci"
+          alembic upgrade head
+          alembic current
+          alembic downgrade base
+          alembic upgrade head
+          alembic current
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      # Dummy creds required because the compose file fail-closed interpolates
+      # POSTGRES_*; values are validation-only dummies, never secrets.
+      # No push: proves both Dockerfiles still build on every PR.
+      - name: Build both images (no push)
+        run: POSTGRES_USER=ci POSTGRES_PASSWORD=ci-dummy-change-me POSTGRES_DB=ci docker compose build
