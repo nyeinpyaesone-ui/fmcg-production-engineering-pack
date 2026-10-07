@@ -27,7 +27,8 @@ stays unticked, no matter how confident the narrative sounds.
   tenancy/branch model, user count, transaction volume and RPO/RTO. Partial evidence gathered: role default is
   `"user"` (`models.py:28`) and payment totals aggregate (`routers/payments.py:112`) in that repo.
 - [ ] FMCG-002: v1 workflows and operating rules approved by the business owner (`approval_gate: yes`).
-- [ ] FMCG-004: compatibility selections approved by a human (`approval_gate: yes`) after a green CI run.
+- [x] FMCG-004: compatibility selections approved by a human (`approval_gate: yes`) with green CI —
+  approved 2026-10-07.
 
 ## 3. CI and delivery
 
