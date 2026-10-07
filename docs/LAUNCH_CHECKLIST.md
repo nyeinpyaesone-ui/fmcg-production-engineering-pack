@@ -15,6 +15,8 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Worktree clean at launch; 85 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
 - [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
+- [x] `main` branch protection registered on the platform: 1 approving review, all 5 CI jobs required
+  and strict, enforced for admins, no force-pushes or deletions.
 - [ ] Review completed and explicit merge approval recorded (policy: `merge_to_main: explicit_human_approval`).
 
 ## 2. Governance and approvals

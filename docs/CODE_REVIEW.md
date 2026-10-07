@@ -39,5 +39,7 @@ Reviews protect `main`, not egos. Every comment must point at a rule below, a do
 - Approval matrix lives in `config/agent-policy.yaml`: `merge_to_main` needs explicit human approval,
   and `approval_gate: yes` tasks need their named approval first.
 - Merge only with all `quality.yml` checks green; a human performs the merge (see `docs/DEV_FLOW.md`).
+  Platform branch protection on `main` enforces this mechanically: 1 approval, all 5 jobs strict, no
+  force-push — policy as code, not just prose.
 - Never force-push `main`; never merge with red checks. Revert a bad merge with `git revert` on a new
   branch, and forward-fix schema-carrying releases per `docs/DEPLOYMENT.md` step 7.
