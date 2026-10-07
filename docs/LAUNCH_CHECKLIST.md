@@ -40,8 +40,8 @@ stays unticked, no matter how confident the narrative sounds.
   current tip).
 - [x] `containers` job green on run `37531441414`: both Dockerfiles build on runners (no push). Dockerfile
   breakage can no longer reach release silently.
-- [ ] Format gate: `ruff format` configured and invoked; frontend formatter installed and checked in CI
-  (tracked deviation in `docs/COMPATIBILITY.md`, required by `config/agent-policy.yaml`).
+- [x] Format gate: `ruff format --check` in backend CI, Prettier `format:check` (3.9.9) in frontend CI —
+  green on run `37580405091`. Workflow yamllint covers both workflows (same run).
 - [ ] Workflow yamllint for `.github/workflows/*.yml` (tracked in FMCG-005 notes).
 - [ ] Review and pin the `setup-python`/gitleaks action SHAs flagged TODO in `quality.yml` before release.
 
