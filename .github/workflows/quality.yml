@@ -63,6 +63,36 @@ jobs:
       - run: npm run format:check --prefix frontend
       - run: npm test --prefix frontend
       - run: npm run build --prefix frontend
+  migration-pg:
+    # Proves migrations against real PostgreSQL, closing the SQLite-only dialect risk (FMCG-006).
+    # Credentials are validation-only dummies for an ephemeral CI service, never secrets.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-dummy-change-me
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.11.17"
+      - run: pip install -r backend/requirements-dev.txt
+      - run: |
+          cd backend
+          export FMCG_DATABASE_URL="postgresql+asyncpg://ci:ci-dummy-change-me@127.0.0.1:5432/ci"
+          alembic upgrade head
+          alembic current
+          alembic downgrade base
+          alembic upgrade head
+          alembic current
   containers:
     runs-on: ubuntu-latest
     steps:
