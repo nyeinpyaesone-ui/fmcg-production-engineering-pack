@@ -72,7 +72,8 @@ stays unticked, no matter how confident the narrative sounds.
 - [x] Async Alembic environment with `0001` empty anchor revision; tables start at FMCG-008.
 - [x] Empty-database upgrade and downgrade/re-upgrade harness green locally (isolated SQLite file, same async path).
 - [x] CLI `alembic upgrade head` and fail-closed refusal without the env var both demonstrated.
-- [ ] Disposable-PostgreSQL migration verification (required before release, Gate 7).
+- [x] Disposable-PostgreSQL migration verification green in CI (run `37580771259`, `migration-pg` job:
+  upgrade/downgrade cycle on ephemeral `postgres:15-alpine`). SQLite harness remains the fast local check.
 
 ## 8. Documentation
 
