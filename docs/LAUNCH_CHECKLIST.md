@@ -36,8 +36,8 @@ stays unticked, no matter how confident the narrative sounds.
   (`tsc -b`, `vitest` 1 passed, `vite build` emitting `dist/`).
 - [x] First green run of `.github/workflows/quality.yml` on the PR — run `37502034199`, all three jobs passed
   on the pinned runtimes (Python 3.11.17, Node 22.23.3). Required two CI fixes along the way: `GITHUB_TOKEN` for the
-  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves. Latest green run `37531673773` (all four jobs,
-  current tip).
+  gitleaks PR scan and `fetch-depth: 0` so the scan range resolves. Runs have stayed green on every push since
+  (e.g. run `37580936839`, all five jobs).
 - [x] `containers` job green on run `37531441414`: both Dockerfiles build on runners (no push). Dockerfile
   breakage can no longer reach release silently.
 - [x] Format gate: `ruff format --check` in backend CI, Prettier `format:check` (3.9.9) in frontend CI —
