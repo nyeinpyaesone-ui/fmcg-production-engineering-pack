@@ -10,9 +10,9 @@ stays unticked, no matter how confident the narrative sounds.
 ## 1. Repository and remote
 
 - [x] Public repository created: `nyeinpyaesone-ui/fmcg-production-engineering-pack` (visibility PUBLIC).
-- [x] `main` (`31f0ec8`) and `feat/gate1-gate2-foundation` (`87b60f5`) pushed with tracking configured.
+- [x] `main` (`55dd433`, PRs #1–#2 merged) and feature branches pushed with tracking configured.
 - [x] Default branch is `main`; work is done on `feat/*` branches per `docs/QUALITY_AND_RELEASE.md`.
-- [x] Worktree clean at launch; 90 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
+- [x] Worktree clean at launch; 93 tracked files; `node_modules/`, `dist/`, `.venv/` and tool caches excluded
   (root `.gitignore` plus tool-generated nested ignores).
 - [x] Pull request opened for `feat/gate1-gate2-foundation` (PR #1) — first remote CI run recorded below.
 - [x] `main` branch protection registered on the platform: 1 approving review, all 5 CI jobs required

@@ -2,11 +2,9 @@
 
 Recorded 2026-10-05, pack HEAD `d6cbb29`.
 
-> Update 2026-10-06: the pack has grown past this Gate 0 snapshot — `docs/` now holds 30 documents, plus the
-> Gate 1/2 scaffold (`backend/`, `frontend/`), deployment stage and release workflow, all on
-> `feat/gate1-gate2-foundation` (tip `87b60f5`, PR #1, CI green). `main` remains `31f0ec8`. The inventory
-> below describes the Gate 0 HEAD only and is kept for history; see `docs/PROJECT_STRUCTURE.md` for the
-> current layout.
+> Update 2026-10-07: PRs #1 and #2 are merged — `main` is now `55dd433` (Gate 1/2 scaffold, deployment
+> stage, hardening, all CI green). The inventory below describes the Gate 0 HEAD only and is kept for history;
+> see `docs/PROJECT_STRUCTURE.md` for the current layout.
 
 ## Repository
 
